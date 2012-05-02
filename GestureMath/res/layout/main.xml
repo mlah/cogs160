@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
     android:descendantFocusability="beforeDescendants"
-    android:focusableInTouchMode="true" >
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/textView"
@@ -23,8 +23,8 @@
             android:layout_width="125dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="48pt"
-            android:text="3" />
+            android:text="3"
+            android:textSize="48pt" />
 
         <TextView
             android:id="@+id/plusLeft1"
@@ -40,8 +40,8 @@
             android:layout_width="125dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="48pt"
-            android:text="2" />
+            android:text="2"
+            android:textSize="48pt" />
 
         <TextView
             android:id="@+id/plusLeft2"
@@ -50,15 +50,15 @@
             android:gravity="center_vertical|center_horizontal"
             android:text="+"
             android:textSize="48pt" />
-        
+
         <Button
             android:id="@+id/leftNum3"
             android:layout_width="125dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="48pt"
-            android:text="8" />
-        
+            android:text="8"
+            android:textSize="48pt" />
+
         <TextView
             android:id="@+id/equals"
             android:layout_width="96dp"
@@ -69,14 +69,14 @@
 
         <EditText
             android:id="@+id/inputField"
-            android:layout_width="125dp"
+            android:layout_width="175dp"
             android:layout_height="match_parent"
-            android:inputType="number"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="48pt"
-            android:maxLength="1" >
+            android:inputType="number"
+            android:maxLength="2"
+            android:textSize="48pt" >
         </EditText>
-        
+
         <TextView
             android:id="@+id/plusLeft2"
             android:layout_width="72dp"
@@ -84,14 +84,48 @@
             android:gravity="center_vertical|center_horizontal"
             android:text="+"
             android:textSize="48pt" />
-            
+
         <Button
             android:id="@+id/rightNum"
             android:layout_width="125dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical|center_horizontal"
-            android:textSize="48pt"
-            android:text="8" />
+            android:text="8"
+            android:textSize="48pt" />
     </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="368dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+            
+                <TextView
+                    android:id="@+id/dbDebug"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="solved_problem table" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="150dp" >
+
+        <Button
+            android:id="@+id/nextButton"
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Next >"
+            android:textSize="40pt" />
+
+    </RelativeLayout>
 
 </LinearLayout>

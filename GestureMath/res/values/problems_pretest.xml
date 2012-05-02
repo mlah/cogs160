@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="problem1">
+        <item name="id">1</item>
+        <item name="type">addition</item>
+        <item name="left1">6</item>
+        <item name="left2">3</item>
+        <item name="left3">4</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">4</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">9</item>
+    </array>
+    <array name="problem2">
+        <item name="id">2</item>
+        <item name="type">addition</item>
+        <item name="left1">2</item>
+        <item name="left2">3</item>
+        <item name="left3">9</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">9</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">5</item>
+    </array>
+    <array name="problem3">
+        <item name="id">3</item>
+        <item name="type">addition</item>
+        <item name="left1">8</item>
+        <item name="left2">4</item>
+        <item name="left3">6</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">6</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">12</item>
+    </array>
+</resources>
+    
