@@ -2,7 +2,6 @@ package edu.ucsd.cogs160;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import android.R.color;
 import android.app.Activity;
@@ -22,7 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class GestureMathActivity extends Activity implements OnTouchListener {
+public class GestureMathProblemFlowActivity extends Activity implements OnTouchListener {
     private TextView statusText;
     private Button leftNum1;
     private Button leftNum2;
@@ -58,9 +57,8 @@ public class GestureMathActivity extends Activity implements OnTouchListener {
         dbHelper = new GestureMathDataOpenHelper(this.getApplicationContext());
         db = dbHelper.getWritableDatabase();
                 
-        //TODO: generate unique run ID from db (get stored number, increment, use, and update db)
-        Random rand = new Random();
-        studentId = rand.nextInt(99999);
+        //get random student id
+        studentId = getIntent().getIntExtra("studentId", -1);
         
         //initialize problem list
         res = getResources();
@@ -74,6 +72,7 @@ public class GestureMathActivity extends Activity implements OnTouchListener {
         CONFIRM_COLOR = res.getColor(R.color.CadetBlue);
 
         statusText = (TextView)findViewById(R.id.textView);
+        statusText.setText("Student ID: " + String.valueOf(studentId));
         downStatus = 0;
         
         dbDebugText = (TextView)findViewById(R.id.dbDebug);
@@ -144,6 +143,14 @@ public class GestureMathActivity extends Activity implements OnTouchListener {
         //set values for current problem
         initializeProblem(problemList.get(currentProblemIndex));
     }
+    
+    /** Called when the activity is finished by calling finish()
+     *  Do cleanup or final write to db here */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+    }
 
     
     
@@ -193,10 +200,15 @@ public class GestureMathActivity extends Activity implements OnTouchListener {
         //TODO: out of problems.  what next?
         if (currentProblemIndex > maxProblemIndex) {
             //if pressed twice, delete rows from db
-            if (currentProblemIndex > maxProblemIndex+1) {
+            if (currentProblemIndex == maxProblemIndex+1) {
                 dbHelper.deleteAllSolvedProblems(db);
                 statusText.setText("solved problems deleted from db");
+                dbDebugText.setText(dbHelper.getSolvedProblems(db));
                 return;
+            }
+            //if pressed thrice, destroy activity, return to start screen
+            if (currentProblemIndex == maxProblemIndex+2) {
+                finish();
             }
             statusText.setText("no more problems");
             return;
@@ -284,10 +296,11 @@ public class GestureMathActivity extends Activity implements OnTouchListener {
         return true;
     }
     
-    //TODO: disable back button in final version?
-//    //disable back button?
-//    @Override
-//    public void onBackPressed() {
-//        // do nothing
-//    }
+    
+    
+    //disable back button
+    @Override
+    public void onBackPressed() {
+        // do nothing
+    }
 }

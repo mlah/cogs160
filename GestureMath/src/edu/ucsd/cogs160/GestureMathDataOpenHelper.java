@@ -54,12 +54,12 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     }
     
     public String getSolvedProblems(SQLiteDatabase db) {
-        String output = "student_id  problem_id  did_gesture  correct\n";
+        String output = "student_id\tproblem_id\tdid_gesture\tcorrect\n";
         Cursor c = db.query(SOLVED_PROBLEMS_TABLE_NAME, null, null, null, null, null, null);
         while (c.moveToNext()) {
-            output += String.valueOf(c.getInt(0)) + "  " + 
-                      String.valueOf(c.getInt(1)) + "  " + 
-                      String.valueOf(c.getInt(2)) + "  " + 
+            output += String.valueOf(c.getInt(0)) + "\t" + 
+                      String.valueOf(c.getInt(1)) + "\t\t\t\t" + 
+                      String.valueOf(c.getInt(2)) + "\t\t\t\t" + 
                       String.valueOf(c.getInt(3)) + "\n";
         }
         return output;

@@ -11,14 +11,33 @@
         android:label="@string/app_name" 
         android:debuggable="true">
         <activity
-            android:name=".GestureMathActivity"
+            android:name=".GestureMathStartActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden"
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GestureMathOptionsActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".GestureMathProblemFlowActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="landscape" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
     </application>
