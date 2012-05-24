@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <array name="problem1">
+    <string name="pretraining_intro">I\'m going to show you some hand movements to help you think about these problems and I want you to repeat them after me</string>
+    <string name="pretraining_instr1">I want to make one side equal to the other side</string>
+    <string name="pretraining_instr2">Now I want you to repeat those words and hand movements</string>
+    <array name="pretraining1">
         <item name="id">1</item>
         <item name="type">addition</item>
         <item name="left1">6</item>
@@ -11,7 +14,7 @@
         <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
         <item name="solution">9</item>
     </array>
-    <array name="problem2">
+    <array name="pretraining2">
         <item name="id">2</item>
         <item name="type">addition</item>
         <item name="left1">2</item>
@@ -22,7 +25,7 @@
         <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
         <item name="solution">5</item>
     </array>
-    <array name="problem3">
+    <array name="pretraining3">
         <item name="id">3</item>
         <item name="type">addition</item>
         <item name="left1">8</item>

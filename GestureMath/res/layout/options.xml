@@ -7,40 +7,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="right"
-        android:paddingRight="100dp" 
+        android:orientation="vertical"
+        android:paddingRight="100dp"
         android:paddingTop="50dp" >
-	    
-	    <Switch
-	        android:id="@+id/switch1"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Highlight numbers on correct gesture"
-	        android:textSize="12pt"
-	        android:paddingTop="20dp" />
-	
-	    <Switch
-	        android:id="@+id/switch2"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Incredible"
-	        android:textSize="12pt"
-	        android:paddingTop="20dp" />
-	
-	    <Switch
-	        android:id="@+id/switch3"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="Amazing"
-	        android:textSize="12pt"
-	        android:paddingTop="20dp" />
-	    
+
+        <Button
+            android:id="@+id/clearDbButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Clear Database" />
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Highlight numbers on correct gesture"
+            android:textSize="12pt" />
+
+        <Switch
+            android:id="@+id/switch2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Incredible"
+            android:textSize="12pt" />
+
+        <Switch
+            android:id="@+id/switch3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:text="Amazing"
+            android:textSize="12pt" />
     </LinearLayout>
-    
+
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent" 
+        android:layout_height="fill_parent"
         android:gravity="bottom" >
 
         <Button
@@ -52,7 +57,6 @@
             android:gravity="center_vertical|center_horizontal"
             android:text="Save"
             android:textSize="36pt" />
-
     </RelativeLayout>
 
 </LinearLayout>
