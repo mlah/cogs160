@@ -16,6 +16,22 @@ public final class R {
         public static final int pretraining1=0x7f080000;
         public static final int pretraining2=0x7f080001;
         public static final int pretraining3=0x7f080002;
+        /**  Experimenter Problems 
+         */
+        public static final int training_exp1=0x7f080003;
+        public static final int training_exp2=0x7f080004;
+        public static final int training_exp3=0x7f080005;
+        public static final int training_exp4=0x7f080006;
+        public static final int training_exp5=0x7f080007;
+        public static final int training_exp6=0x7f080008;
+        /**  Student Problems 
+         */
+        public static final int training_stu1=0x7f080009;
+        public static final int training_stu2=0x7f08000a;
+        public static final int training_stu3=0x7f08000b;
+        public static final int training_stu4=0x7f08000c;
+        public static final int training_stu5=0x7f08000d;
+        public static final int training_stu6=0x7f08000e;
     }
     public static final class attr {
     }
@@ -218,11 +234,23 @@ public final class R {
         public static final int start=0x7f030002;
     }
     public static final class raw {
-        public static final int pretraining_0=0x7f050000;
-        public static final int pretraining_1=0x7f050001;
-        public static final int pretraining_1a=0x7f050002;
-        public static final int pretraining_2=0x7f050003;
-        public static final int pretraining_3=0x7f050004;
+        public static final int now_its_your_turn=0x7f050000;
+        public static final int pretraining_0=0x7f050001;
+        public static final int pretraining_0_2=0x7f050002;
+        public static final int pretraining_1=0x7f050003;
+        public static final int pretraining_1a=0x7f050004;
+        public static final int pretraining_2=0x7f050005;
+        public static final int pretraining_3=0x7f050006;
+        public static final int training_0=0x7f050007;
+        public static final int training_1_1=0x7f050008;
+        public static final int training_1_2=0x7f050009;
+        public static final int training_1_3=0x7f05000a;
+        public static final int training_1_4=0x7f05000b;
+        public static final int training_1_5=0x7f05000c;
+        public static final int training_1_6=0x7f05000d;
+        public static final int training_2=0x7f05000e;
+        public static final int training_3=0x7f05000f;
+        public static final int training_4=0x7f050010;
     }
     public static final class string {
         public static final int app_name=0x7f070004;
@@ -230,5 +258,17 @@ public final class R {
         public static final int pretraining_instr1=0x7f070001;
         public static final int pretraining_instr2=0x7f070002;
         public static final int pretraining_intro=0x7f070000;
+        public static final int training_enter_answer=0x7f07000e;
+        public static final int training_gesture=0x7f07000f;
+        public static final int training_instr_1=0x7f070007;
+        public static final int training_instr_2=0x7f070008;
+        public static final int training_instr_3=0x7f070009;
+        public static final int training_instr_4=0x7f07000a;
+        public static final int training_instr_5=0x7f07000b;
+        public static final int training_instr_6=0x7f07000c;
+        public static final int training_instr_base=0x7f070006;
+        public static final int training_instr_post=0x7f07000d;
+        public static final int training_intro=0x7f070005;
+        public static final int training_repeat_gesture=0x7f070010;
     }
 }

@@ -15,7 +15,9 @@ import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
+import android.text.method.DigitsKeyListener;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -31,7 +33,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class GestureMathProblemFlowActivity extends Activity 
-                                            implements OnTouchListener, OnKeyListener, OnClickListener, AnimatorListener {
+                                            implements OnTouchListener, OnKeyListener, OnClickListener, 
+                                                       AnimatorListener, OnCompletionListener {
     private TextView statusText;
     private Button leftNum1;
     private Button leftNum2;
@@ -184,55 +187,44 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    
-    public void initializeForCurrentState() {
-        switch (currentMode) {
-        case PRETRAINING:
-            initializePretraining();
-            break;
-        case TRAINING:
-            initializeTraining();
-            break;
-        }
-    }
-    
-    
-    
+    //PRETRAINING 0
     public void initializePretraining() {
         currentMode = ProblemMode.PRETRAINING;
         currentScreen = 0;
+
+        initializeProblemList(currentMode);
+        
+        //set up problem state
+        hideProblem();
         touchActive = false;
         
-        //initialize problem list
-        problemList = initializeProblemList(currentMode);
-        currentProblemIndex = 0;
-        maxProblemIndex = problemList.size()-1;
-               
-        //hide problem
-        hideProblem();
+        nextButton.setVisibility(View.VISIBLE);
+        repeatButton.setVisibility(View.VISIBLE);
         
-        //intro text, show next button
+        //set up text and play voice
         instructionText.setText(res.getString(R.string.pretraining_intro));
         releaseMediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_0);
         mediaPlayer.start();
-        nextButton.setVisibility(View.VISIBLE);
-        repeatButton.setVisibility(View.VISIBLE);
     }
     
     
-    
+    //PRETRAINING 1
     public void pretrainingInstructionScreen() {
         currentScreen = 1;
+        
         initializeProblem(problemList.get(currentProblemIndex));
+        
+        //set up problem state
         showProblem();
+        unHighlightAll();
         touchActive = false;
+        toggleTouch(false);
+        
         nextButton.setVisibility(View.INVISIBLE);
         repeatButton.setVisibility(View.VISIBLE);
         
-        unHighlightAll();
-        toggleTouch(false);
-        
+        //set up text and play voice
         instructionText.setText(res.getString(R.string.pretraining_instr1));
         releaseMediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_1);
@@ -243,23 +235,28 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    
-    public void pretrainingTrialScreen() {
+    //PRETRAINING 2
+    public void pretrainingTrialScreen(int text, int voice) {
         currentScreen = 2;
-        showProblem();
-        touchActive = true;
         
+        initializeProblem(problemList.get(currentProblemIndex));
+        
+        //set up problem state
+        showProblem();
         unHighlightAll();
+        touchActive = true;
         toggleTouch(true);
         inputField.setOnTouchListener(this); //enable touch
         inputField.setKeyListener(null);     //disable EditText input
 
-        instructionText.setText(res.getString(R.string.pretraining_instr2));
-        releaseMediaPlayer();
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_2);
-        mediaPlayer.start();
         nextButton.setVisibility(View.INVISIBLE);
         repeatButton.setVisibility(View.VISIBLE);
+        
+        //set up text and play voice
+        instructionText.setText(res.getString(text));
+        releaseMediaPlayer();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), voice);
+        mediaPlayer.start();
         
         //restore UI elements to original state, clear input, etc
         inputField.setText("");
@@ -270,20 +267,121 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    
+    //TRAINING 0
     public void initializeTraining() {
         currentMode = ProblemMode.TRAINING;
         currentScreen = 0;
         
-        //initialize problem list
-        problemList = initializeProblemList(currentMode);
-        currentProblemIndex = 0;
-        maxProblemIndex = problemList.size()-1;
-    }
+        initializeProblemList(currentMode);
+        
+        //set up problem state
+        hideProblem();
+        touchActive = false;
+        
+        nextButton.setVisibility(View.VISIBLE);
+        repeatButton.setVisibility(View.VISIBLE);
+        
+        //set up text and play voice
+        instructionText.setText(res.getString(R.string.training_intro));
+        releaseMediaPlayer();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.training_0);
+        mediaPlayer.start();
 
+    }
     
     
-    public List<Problem> initializeProblemList(ProblemMode pm) {
+    //TRAINING 1
+    public void trainingSolutionScreen() {
+        currentScreen = 1;
+        
+        initializeProblem(problemList.get(currentProblemIndex));
+        
+        //set up problem state
+        showProblem();
+        inputField.setText(String.valueOf(problemList.get(currentProblemIndex).solution)); //show problem solution
+        unHighlightAll();
+        touchActive = false;
+        toggleTouch(false);
+        
+        nextButton.setVisibility(View.INVISIBLE);
+        repeatButton.setVisibility(View.VISIBLE);
+        
+        //set up text and play voice
+        //TODO: is adding currentProblemIndex here okay? are the values in R.java guaranteed to be sequential?
+        instructionText.setText(res.getString(R.string.training_instr_base) + "\n" +
+                                res.getString(R.string.training_instr_1 + currentProblemIndex) + "\n" +
+                                res.getString(R.string.training_instr_post));
+        releaseMediaPlayer();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.training_1_1 + currentProblemIndex);
+        mediaPlayer.setOnCompletionListener(this);
+        startMediaPlayer();
+    }
+    
+    
+    //TRAINING 2
+    public void trainingGesturePreScreen() {
+        //interaction is the same as pretrainingTrialScreen, 
+        // but make sure to set the currentScreen correctly for training
+        pretrainingTrialScreen(R.string.training_gesture, R.raw.training_2);
+        currentScreen = 2;
+    }
+    
+    
+    //TRAINING 2A (5)
+    public void trainingGesturePreInstructionScreen() {
+        //interaction is the same as pretrainingInstructionScreen, 
+        // but make sure to set the currentScreen correctly for training
+        pretrainingInstructionScreen();
+        currentScreen = 5;
+    }
+    
+    
+    //TRAINING 3
+    public void trainingAnswerScreen() {
+        currentScreen = 3;
+        
+        //set up problem state
+        showProblem();
+        unHighlightAll();
+        //touchActive = true;
+        toggleTouch(true);
+        inputField.setOnTouchListener(null);                 //disable touch
+        inputField.setKeyListener(new DigitsKeyListener());  //enable EditText input
+        inputField.setText("");
+        inputField.setFocusableInTouchMode(true);
+        inputField.setCursorVisible(false);
+        
+        nextButton.setVisibility(View.INVISIBLE);
+        repeatButton.setVisibility(View.VISIBLE);
+        
+        //set up text and play voice
+        instructionText.setText(res.getString(R.string.training_enter_answer));
+        releaseMediaPlayer();
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.training_3);
+        mediaPlayer.start();
+    }
+    
+    
+    //TRAINING 4
+    public void trainingGesturePostScreen() {
+        //interaction is the same as pretrainingTrialScreen, 
+        // but make sure to set the currentScreen correctly for training
+        // slightly different text
+        pretrainingTrialScreen(R.string.training_repeat_gesture, R.raw.training_4);
+        currentScreen = 4;   
+    }
+    
+    
+    //TRAINING 4A (6)
+    public void trainingGesturePostInstructionScreen() {
+        //interaction is the same as pretrainingInstructionScreen, 
+        // but make sure to set the currentScreen correctly for training
+        pretrainingInstructionScreen();
+        currentScreen = 5;
+    }
+    
+    
+    public void initializeProblemList(ProblemMode pm) {
         
         ArrayList<Problem> pl = new ArrayList<Problem>();
         
@@ -304,7 +402,13 @@ public class GestureMathProblemFlowActivity extends Activity
             }
             
         } else if (pm == ProblemMode.TRAINING) {
-            String[] problemsStrings = {"training1", "training2", "training3"};
+            //alternate experimenter and student problems (total must be even)
+            String[] problemsStrings = {"training_exp1", "training_stu1", 
+                                        "training_exp2", "training_stu2", 
+                                        "training_exp3", "training_stu3", 
+                                        "training_exp4", "training_stu4", 
+                                        "training_exp5", "training_stu5", 
+                                        "training_exp6", "training_stu6" };
             for (String s : problemsStrings) {
                 TypedArray ta = res.obtainTypedArray(res.getIdentifier(s, "array", "edu.ucsd.cogs160"));
                 pl.add(new Problem(ta.getInt(0, -1),
@@ -319,8 +423,10 @@ public class GestureMathProblemFlowActivity extends Activity
                 ta.recycle();
             }
         }
-            
-        return pl;
+        
+        currentProblemIndex = 0;
+        maxProblemIndex = pl.size()-1;
+        problemList = pl;
     }
     
     
@@ -375,27 +481,64 @@ public class GestureMathProblemFlowActivity extends Activity
     //when the Next button is pressed, move to the next problem (or action)
     public void nextScreen() {
         
-        //if first problem, show problem 
-        if (currentScreen == 0) {
-            pretrainingInstructionScreen();
-        } else if (currentScreen == 1) {
-            pretrainingTrialScreen();
-        } else if (currentScreen == 2) {
-            //advance to next problem
-            currentProblemIndex++;
-            
-            //out of problems, if pretraining, move to training. if training, finish
-            if (currentProblemIndex > maxProblemIndex) {
-                if (currentMode == ProblemMode.PRETRAINING) {
+        if (currentMode == ProblemMode.PRETRAINING) {
+            switch (currentScreen) {
+            case 0:
+                //if first problem, show problem 
+                pretrainingInstructionScreen();
+                break;
+            case 1:
+                pretrainingTrialScreen(R.string.pretraining_instr2, R.raw.pretraining_2);
+                break;
+            case 2:                
+                //out of problems, if pretraining, move to training
+                if (currentProblemIndex >= maxProblemIndex) {
                     initializeTraining();
                     return;
-                } else if (currentMode == ProblemMode.TRAINING) {
+                }
+                
+                //advance to next problem
+                currentProblemIndex++;
+                
+                //play instructions for next problem
+                pretrainingInstructionScreen();
+                break;
+            }
+        } else if (currentMode == ProblemMode.TRAINING) {
+            switch (currentScreen) {
+            case 0:
+                //if first problem, show problem 
+                trainingSolutionScreen();
+                break;
+            case 1:
+                currentProblemIndex++;  //move from experimenter problem to student problem
+                trainingGesturePreScreen();
+                break;
+            case 2:
+                trainingAnswerScreen();
+                break;
+            case 3:
+                trainingGesturePostScreen();
+                break;
+            case 4:
+                //out of problems, finish
+                if (currentProblemIndex >= maxProblemIndex) {
                     finish();                
                 }
+                
+                //advance to next problem
+                currentProblemIndex++;
+                
+                //play instructions for next problem
+                trainingSolutionScreen();
+                break;
+            case 5:
+                trainingGesturePreScreen();
+                break;
+            case 6:
+                trainingGesturePostScreen();
+                break;
             }
-            
-            //play instructions for next problem
-            pretrainingInstructionScreen();
         }
     }
     
@@ -403,12 +546,42 @@ public class GestureMathProblemFlowActivity extends Activity
     
     public void repeatScreen() {
         //based on current screen, repeat speech or reset touch
-        if (currentScreen == 0) {
-            startMediaPlayer();
-        } else if (currentScreen == 1) {
-            pretrainingInstructionScreen();
-        } else if (currentScreen == 2) {
-            pretrainingInstructionScreen();
+        if (currentMode == ProblemMode.PRETRAINING) {
+            switch (currentScreen) {
+            case 0:
+                startMediaPlayer();
+                break;
+            case 1:
+                pretrainingInstructionScreen();
+                break;
+            case 2:
+                pretrainingInstructionScreen();
+                break;
+            }
+        } else if (currentMode == ProblemMode.TRAINING) {
+            switch (currentScreen) {
+            case 0:
+                startMediaPlayer();
+                break;
+            case 1:
+                trainingSolutionScreen();
+                break;
+            case 2:
+                trainingGesturePreInstructionScreen();
+                break;
+            case 3:
+                trainingAnswerScreen();
+                break;
+            case 4:
+                trainingGesturePostInstructionScreen();
+                break;
+            case 5:
+                trainingGesturePreInstructionScreen();
+                break;
+            case 6:
+                trainingGesturePostInstructionScreen();
+                break;
+            }
         }
     }
     
@@ -537,16 +710,15 @@ public class GestureMathProblemFlowActivity extends Activity
                     dbHelper.addSolvedProblem(db, studentId, currentProblemId, didGesture, 0);
                 }
                 //show next screen button, disable input, change input field color to confirmed
-                statusText.setText("next screen");
                 nextButton.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(inputField.getWindowToken(), 0);
                 inputField.setCursorVisible(false);
                 inputField.setFocusableInTouchMode(false);
-                inputField.setBackgroundColor(CONFIRM_COLOR);
+                //inputField.setBackgroundColor(CONFIRM_COLOR);
                 
                 //debug db solved_problem table
-                dbDebugText.setText(dbHelper.getSolvedProblems(db));
+                //dbDebugText.setText(dbHelper.getSolvedProblems(db));
             }
             return true;
         }
@@ -596,6 +768,16 @@ public class GestureMathProblemFlowActivity extends Activity
         
         if (a.equals(oneFadeOutAnimator)) {
             nextButton.setVisibility(View.VISIBLE);
+        }
+    }
+    
+    
+    
+    public void onCompletion(MediaPlayer mp) {
+        if (currentMode == ProblemMode.TRAINING) {
+            if (currentScreen == 1) {
+                nextButton.setVisibility(View.VISIBLE);
+            }
         }
     }
     

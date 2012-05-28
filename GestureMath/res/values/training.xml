@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="training_intro">Pay attention carefully to how I explain this problem</string>
+    <string name="training_instr_base">I want to make one side equal to the other side.</string>
+    <string name="training_instr_1">See, 5 plus 6 plus 3 is 14, and 11 plus 3 is 14.</string>
+    <string name="training_instr_2">See, 3 plus 4 plus 9 is 16, and 7 plus 9 is 16.</string>
+    <string name="training_instr_3">See, 4 plus 2 plus 7 is 13, and 6 plus 7 is 13.</string>
+    <string name="training_instr_4">See, 2 plus 5 plus 7 is 14, and 7 plus 7 is 14.</string>
+    <string name="training_instr_5">See, 8 plus 3 plus 2 is 13, and 11 plus 2 is 13.</string>
+    <string name="training_instr_6">See, 3 plus 2 plus 5 is 10, and 5 plus 5 is 10.</string>
+    <string name="training_instr_post">So one side is equal to the other side.</string>
+    <string name="training_enter_answer">Now write your answer in the blank</string>
+    <string name="training_gesture">Now it\'s your turn.\nCan you say those words and do those hand movements for me?</string>
+    <string name="training_repeat_gesture">Now, can you say those words and do those hand movements one more time for me?</string>
+    <!-- Experimenter Problems -->
+    <array name="training_exp1">
+        <item name="id">4</item>
+        <item name="type">addition</item>
+        <item name="left1">5</item>
+        <item name="left2">6</item>
+        <item name="left3">3</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">3</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">11</item>
+    </array>
+    <array name="training_exp2">
+        <item name="id">5</item>
+        <item name="type">addition</item>
+        <item name="left1">3</item>
+        <item name="left2">4</item>
+        <item name="left3">9</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">9</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">7</item>
+    </array>
+    <array name="training_exp3">
+        <item name="id">6</item>
+        <item name="type">addition</item>
+        <item name="left1">4</item>
+        <item name="left2">2</item>
+        <item name="left3">7</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">7</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">6</item>
+    </array>
+    <array name="training_exp4">
+        <item name="id">7</item>
+        <item name="type">addition</item>
+        <item name="left1">2</item>
+        <item name="left2">5</item>
+        <item name="left3">7</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">7</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">7</item>
+    </array>
+    <array name="training_exp5">
+        <item name="id">8</item>
+        <item name="type">addition</item>
+        <item name="left1">8</item>
+        <item name="left2">3</item>
+        <item name="left3">2</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">2</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">11</item>
+    </array>
+    <array name="training_exp6">
+        <item name="id">9</item>
+        <item name="type">addition</item>
+        <item name="left1">3</item>
+        <item name="left2">2</item>
+        <item name="left3">5</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">5</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">5</item>
+    </array>
+    
+    <!-- Student Problems -->
+    <array name="training_stu1">
+        <item name="id">10</item>
+        <item name="type">addition</item>
+        <item name="left1">3</item>
+        <item name="left2">2</item>
+        <item name="left3">8</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">8</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">5</item>
+    </array>
+    <array name="training_stu2">
+        <item name="id">11</item>
+        <item name="type">addition</item>
+        <item name="left1">5</item>
+        <item name="left2">7</item>
+        <item name="left3">4</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">4</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">12</item>
+    </array>
+    <array name="training_stu3">
+        <item name="id">12</item>
+        <item name="type">addition</item>
+        <item name="left1">2</item>
+        <item name="left2">4</item>
+        <item name="left3">9</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">9</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">6</item>
+    </array>
+    <array name="training_stu4">
+        <item name="id">13</item>
+        <item name="type">addition</item>
+        <item name="left1">2</item>
+        <item name="left2">6</item>
+        <item name="left3">5</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">5</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">8</item>
+    </array>
+    <array name="training_stu5">
+        <item name="id">14</item>
+        <item name="type">addition</item>
+        <item name="left1">7</item>
+        <item name="left2">4</item>
+        <item name="left3">2</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">2</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">11</item>
+    </array>
+    <array name="training_stu6">
+        <item name="id">15</item>
+        <item name="type">addition</item>
+        <item name="left1">2</item>
+        <item name="left2">5</item>
+        <item name="left3">6</item>
+        <item name="left_exclude">3</item>  <!-- indicates which of the left side is not part of the solution -->
+        <item name="right">6</item>
+        <item name="blank_location">left</item>  <!-- indicates if the blank is on the left or right -->
+        <item name="solution">7</item>
+    </array>
+</resources>
+    
