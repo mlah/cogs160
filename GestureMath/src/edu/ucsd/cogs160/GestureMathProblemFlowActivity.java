@@ -309,10 +309,10 @@ public class GestureMathProblemFlowActivity extends Activity
         //set up text and play voice
         //TODO: is adding currentProblemIndex here okay? are the values in R.java guaranteed to be sequential?
         instructionText.setText(res.getString(R.string.training_instr_base) + "\n" +
-                                res.getString(R.string.training_instr_1 + currentProblemIndex) + "\n" +
+                                res.getString(R.string.training_instr_1 + currentProblemIndex/2) + "\n" +
                                 res.getString(R.string.training_instr_post));
         releaseMediaPlayer();
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.training_1_1 + currentProblemIndex);
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.training_1_1 + currentProblemIndex/2);
         mediaPlayer.setOnCompletionListener(this);
         startMediaPlayer();
     }
@@ -377,7 +377,21 @@ public class GestureMathProblemFlowActivity extends Activity
         //interaction is the same as pretrainingInstructionScreen, 
         // but make sure to set the currentScreen correctly for training
         pretrainingInstructionScreen();
-        currentScreen = 5;
+        currentScreen = 6;
+    }
+    
+    
+    
+    //DONE WITH EXPERIMENT
+    public void doneScreen() {
+        currentScreen = -1;
+        hideProblem();
+        
+        instructionText.setText(res.getString(R.string.done_message));
+        
+        nextButton.setText("Done");
+        nextButton.setVisibility(View.VISIBLE);
+        repeatButton.setVisibility(View.INVISIBLE);        
     }
     
     
@@ -452,6 +466,7 @@ public class GestureMathProblemFlowActivity extends Activity
         leftNum3.setEnabled(b);
         inputField.setEnabled(b);
         rightNum.setEnabled(b);
+        
         leftNum1.setTextColor(Color.WHITE);
         leftNum2.setTextColor(Color.WHITE);
         leftNum3.setTextColor(Color.WHITE);
@@ -523,7 +538,8 @@ public class GestureMathProblemFlowActivity extends Activity
             case 4:
                 //out of problems, finish
                 if (currentProblemIndex >= maxProblemIndex) {
-                    finish();                
+                    doneScreen();
+                    return;
                 }
                 
                 //advance to next problem
@@ -537,6 +553,10 @@ public class GestureMathProblemFlowActivity extends Activity
                 break;
             case 6:
                 trainingGesturePostScreen();
+                break;
+            case -1:
+                nextButton.setText("Next >");
+                finish();
                 break;
             }
         }
@@ -596,7 +616,13 @@ public class GestureMathProblemFlowActivity extends Activity
         equals.setVisibility(View.VISIBLE);
         inputField.setVisibility(View.VISIBLE);
         plusRight.setVisibility(View.VISIBLE);
-        rightNum.setVisibility(View.VISIBLE);        
+        rightNum.setVisibility(View.VISIBLE);
+        
+        leftNum1.setTextColor(Color.WHITE);
+        leftNum2.setTextColor(Color.WHITE);
+        leftNum3.setTextColor(Color.WHITE);
+        inputField.setTextColor(Color.WHITE);
+        rightNum.setTextColor(Color.WHITE);
     }
     
     public void hideProblem() {
