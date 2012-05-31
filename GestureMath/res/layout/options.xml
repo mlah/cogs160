@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="Highlight numbers on correct gesture"
-            android:textSize="12pt" />
+            android:textSize="24sp" />
 
         <Switch
             android:id="@+id/switch2"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="Incredible"
-            android:textSize="12pt" />
+            android:textSize="24sp" />
 
         <Switch
             android:id="@+id/switch3"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
             android:text="Amazing"
-            android:textSize="12pt" />
+            android:textSize="24sp" />
     </LinearLayout>
 
     <RelativeLayout
@@ -56,7 +56,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center_vertical|center_horizontal"
             android:text="Save"
-            android:textSize="36pt" />
+            android:textSize="72sp" />
     </RelativeLayout>
 
 </LinearLayout>
