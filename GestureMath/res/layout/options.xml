@@ -56,7 +56,7 @@
             android:layout_alignParentTop="true"
             android:gravity="center_vertical|center_horizontal"
             android:text="Save"
-            android:textSize="72sp" />
+            android:textSize="76sp" />
     </RelativeLayout>
 
 </LinearLayout>

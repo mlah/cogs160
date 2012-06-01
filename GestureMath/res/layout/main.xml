@@ -58,7 +58,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="3"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <TextView
                 android:id="@+id/plusLeft1"
@@ -67,7 +67,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:text="+"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <Button
                 android:id="@+id/leftNum2"
@@ -75,7 +75,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="2"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <TextView
                 android:id="@+id/plusLeft2"
@@ -83,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="+"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <Button
                 android:id="@+id/leftNum3"
@@ -91,7 +91,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="8"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <TextView
                 android:id="@+id/equals"
@@ -99,7 +99,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="="
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <EditText
                 android:id="@+id/inputField"
@@ -108,7 +108,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:inputType="number"
                 android:maxLength="2"
-                android:textSize="96sp" >
+                android:textSize="104sp" >
             </EditText>
 
             <TextView
@@ -117,7 +117,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="+"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
 
             <Button
                 android:id="@+id/rightNum"
@@ -125,7 +125,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="8"
-                android:textSize="96sp" />
+                android:textSize="104sp" />
         </LinearLayout>
 
         <TextView
@@ -134,7 +134,7 @@
             android:layout_height="364dp"
             android:gravity="center"
             android:text="Instructions"
-            android:textSize="48sp" />
+            android:textSize="52sp" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -149,7 +149,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="Repeat"
-                android:textSize="72sp" />
+                android:textSize="76sp" />
 
             <Button
                 android:id="@+id/nextButton"
@@ -159,7 +159,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="Next >"
-                android:textSize="72sp" />
+                android:textSize="76sp" />
         </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>
