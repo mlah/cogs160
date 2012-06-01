@@ -101,8 +101,8 @@ public class GestureMathProblemFlowActivity extends Activity
         //initialize colors
         res = getResources();
         BACKGROUND_COLOR = color.darker_gray;
-        HINT_COLOR = res.getColor(R.color.DodgerBlue);
-        CONFIRM_COLOR = res.getColor(R.color.CadetBlue);
+        HINT_COLOR = res.getColor(R.color.DodgerBlue); //TODO: unused?
+        CONFIRM_COLOR = res.getColor(R.color.holo_blue_dark);
 
         //debug text
         statusText = (TextView)findViewById(R.id.debugText);
