@@ -234,6 +234,7 @@ public class GestureMathProblemFlowActivity extends Activity
         
         if (pm == ProblemMode.PRETRAINING) {
             String[] problemsStrings = {"pretraining1", "pretraining2", "pretraining3"};
+//            String[] problemsStrings = {"pretraining1"};  //for testing
             for (String s : problemsStrings) {
                 TypedArray ta = res.obtainTypedArray(res.getIdentifier(s, "array", "edu.ucsd.cogs160"));
                 pl.add(new Problem(ta.getInt(0, -1),
@@ -256,6 +257,7 @@ public class GestureMathProblemFlowActivity extends Activity
                                         "training_exp4", "training_stu4", 
                                         "training_exp5", "training_stu5", 
                                         "training_exp6", "training_stu6" };
+//            String[] problemsStrings = {"training_exp1", "training_stu1"};  //for testing
             for (String s : problemsStrings) {
                 TypedArray ta = res.obtainTypedArray(res.getIdentifier(s, "array", "edu.ucsd.cogs160"));
                 pl.add(new Problem(ta.getInt(0, -1),
@@ -844,10 +846,10 @@ public class GestureMathProblemFlowActivity extends Activity
                 //if answer entered, lock in answer and show next button
                 if (answer.equals(currentSolution)) {
                     //right answer
-                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 1);
+                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 1, Integer.valueOf(answer));
                 } else {
                     //wrong answer
-                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 0);
+                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 0, Integer.valueOf(answer));
                 }
                 //show next screen button, disable input, change input field color to confirmed
                 nextButton.setVisibility(View.VISIBLE);

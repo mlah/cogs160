@@ -23,6 +23,7 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     private static final String KEY_GESTURE_CONDITION = "gesture_condition";
     private static final String KEY_PROBLEM_ID = "problem_id";
     private static final String KEY_CORRECT = "correct";
+    private static final String KEY_STUDENT_ANSWER = "student_answer";
     
     private static final String OPTIONS_TABLE_NAME = "options";
     private static final String KEY_GESTURE_CONDITION_OPTION = "gesture_condition_option";
@@ -32,7 +33,8 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
                     KEY_STUDENT_ID + " INT, " +
                     KEY_GESTURE_CONDITION + " INT, " +
                     KEY_PROBLEM_ID + " INT, " + 
-                    KEY_CORRECT + " INT);";
+                    KEY_CORRECT + " INT, " + 
+                    KEY_STUDENT_ANSWER + " INT);";
     
     private static final String OPTIONS_TABLE_CREATE =
             "CREATE TABLE " + OPTIONS_TABLE_NAME + " (" +
@@ -41,8 +43,9 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     private static final String INSERT_SOLVED_PROBLEM =
             "INSERT INTO " + SOLVED_PROBLEMS_TABLE_NAME + 
                     " (" + KEY_STUDENT_ID + ", " + KEY_GESTURE_CONDITION + ", " + 
-                           KEY_PROBLEM_ID + ", " + KEY_CORRECT + ") " + 
-                    " VALUES (?, ?, ?, ?);";
+                           KEY_PROBLEM_ID + ", " + KEY_CORRECT + ", " + 
+                           KEY_STUDENT_ANSWER + ") " + 
+                    " VALUES (?, ?, ?, ?, ?);";
 
     private static final String INSERT_OPTIONS =
             "INSERT INTO " + OPTIONS_TABLE_NAME + " (" + KEY_GESTURE_CONDITION_OPTION + ") " + 
@@ -68,13 +71,15 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
 
     }
     
-    public void addSolvedProblem(SQLiteDatabase db, int student_id, int gesture_condition, int problem_id, int correct) {
+    public void addSolvedProblem(SQLiteDatabase db, int student_id, int gesture_condition, 
+                                                    int problem_id, int correct, int student_answer) {
 
         SQLiteStatement stmt = db.compileStatement(INSERT_SOLVED_PROBLEM);
         stmt.bindLong(1, student_id);
         stmt.bindLong(2, gesture_condition);
         stmt.bindLong(3, problem_id);
         stmt.bindLong(4, correct);
+        stmt.bindLong(5, student_answer);
         if (stmt.executeInsert() == -1) {
             //problem!
             Log.e("db insert error", "error inserting solved problem row");
@@ -82,13 +87,14 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     }
     
     public String getSolvedProblems(SQLiteDatabase db) {
-        String output = "student_id\tgesture_condition\tproblem_id\tcorrect\n";
+        String output = "student_id\tgesture_condition\tproblem_id\tcorrect\tstudent_answer\n";
         Cursor c = db.query(SOLVED_PROBLEMS_TABLE_NAME, null, null, null, null, null, null);
         while (c.moveToNext()) {
             output += String.valueOf(c.getInt(0)) + "\t" + 
                       String.valueOf(c.getInt(1)) + "\t\t\t\t\t\t\t\t" + 
                       String.valueOf(c.getInt(2)) + "\t\t\t\t" + 
-                      String.valueOf(c.getInt(3)) + "\n";
+                      String.valueOf(c.getInt(3)) + "\t\t\t" + 
+                      String.valueOf(c.getInt(4)) + "\n";
         }
         return output;
     }
