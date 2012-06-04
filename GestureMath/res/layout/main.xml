@@ -95,7 +95,7 @@
 
             <TextView
                 android:id="@+id/equals"
-                android:layout_width="96dp"
+                android:layout_width="75dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="="
@@ -103,7 +103,9 @@
 
             <EditText
                 android:id="@+id/inputField"
-                android:layout_width="175dp"
+                android:layout_width="160dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical|center_horizontal"
                 android:inputType="number"

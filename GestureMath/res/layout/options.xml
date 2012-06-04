@@ -14,34 +14,38 @@
 
         <Button
             android:id="@+id/clearDbButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Clear Database" />
-
-        <Switch
-            android:id="@+id/switch1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:text="Highlight numbers on correct gesture"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:text="Clear Database"
             android:textSize="24sp" />
 
         <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/gestureConditionSwitch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="20dp"
-            android:text="Incredible"
-            android:textSize="24sp" />
-
-        <Switch
-            android:id="@+id/switch3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:text="Amazing"
+            android:text="Gesture condition"
             android:textSize="24sp" />
     </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="375dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="359dp" >
+
+            <TextView
+                android:id="@+id/dbDebugView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="solved_problems table"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <RelativeLayout
         android:layout_width="wrap_content"

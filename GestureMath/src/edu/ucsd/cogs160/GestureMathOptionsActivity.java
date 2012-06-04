@@ -1,21 +1,25 @@
 package edu.ucsd.cogs160;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Switch;
+import android.widget.TextView;
 
 public class GestureMathOptionsActivity extends Activity implements OnClickListener {
     
-    private Switch option1;
-    private Switch option2;
-    private Switch option3;
+    private Switch gestureCondtionSwitch;
     
     private Button clearDbButton;
     private Button saveButton;
+    
+    private TextView dbDebugView;
     
     private GestureMathDataOpenHelper dbHelper;
     private SQLiteDatabase db;
@@ -25,37 +29,72 @@ public class GestureMathOptionsActivity extends Activity implements OnClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.options);
+        
+        //TODO: this is a hack to delete the database (useful when changing the schema)
+        //this.deleteDatabase("gesture_math");
 
         //initialize db connection
         dbHelper = new GestureMathDataOpenHelper(this.getApplicationContext());
         db = dbHelper.getWritableDatabase();
         
-        //TODO: get options
-        //TODO: set status of switches to correct states
-        
         clearDbButton = (Button)findViewById(R.id.clearDbButton);
         clearDbButton.setOnClickListener(this);
         
-        option1 = (Switch)findViewById(R.id.switch1);
-        option2 = (Switch)findViewById(R.id.switch2);
-        option3 = (Switch)findViewById(R.id.switch3);
-        //option1.setChecked(true);
+        //get options state from db
+        gestureCondtionSwitch = (Switch)findViewById(R.id.gestureConditionSwitch);
+        if (dbHelper.getOptions(db) == 1) {
+            gestureCondtionSwitch.setChecked(true);
+        } else {
+            gestureCondtionSwitch.setChecked(false);
+        }
+        
+        dbDebugView = (TextView)findViewById(R.id.dbDebugView);
+        dbDebugView.setText(dbHelper.getSolvedProblems(db));
         
         saveButton = (Button)findViewById(R.id.saveButton);
         saveButton.setOnClickListener(this);
-        
-
+    }
+    
+    
+    
+    /** Called when the activity is finished by calling finish()
+     *  Do cleanup or final write to db here */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
+        GestureMathDataOpenHelper.backupDb();
     }
 
+    
+    
     public void onClick(View v) {
         if (v.getId() == R.id.clearDbButton) {
-            dbHelper.deleteAllSolvedProblems(db);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure you want to clear the database?")
+                   .setCancelable(false)
+                   .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                           dbHelper.deleteAllSolvedProblems(db);
+                           dbDebugView.setText(dbHelper.getSolvedProblems(db));
+                       }
+                   })
+                   .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                       public void onClick(DialogInterface dialog, int id) {
+                           dialog.cancel();
+                       }
+                   });
+            AlertDialog alert = builder.create();
+            alert.show();
         }
         
         if (v.getId() == R.id.saveButton) {
-            //TODO: save status of options to db
-            //TODO: close db connection
-            //option1.isChecked();
+            //save options state to db
+            if (gestureCondtionSwitch.isChecked()) {
+                dbHelper.updateOptions(db, 1);
+            } else {
+                dbHelper.updateOptions(db, 0);
+            }
             
             //return to start screen
             finish();

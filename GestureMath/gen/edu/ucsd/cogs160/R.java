@@ -203,13 +203,16 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
-        public static final int one_finger=0x7f020001;
-        public static final int two_finger=0x7f020002;
+        public static final int input_underline=0x7f020001;
+        public static final int one_finger=0x7f020002;
+        public static final int two_finger=0x7f020003;
     }
     public static final class id {
         public static final int clearDbButton=0x7f090010;
+        public static final int dbDebugView=0x7f090013;
         public static final int debugText=0x7f090003;
         public static final int equals=0x7f090009;
+        public static final int gestureConditionSwitch=0x7f090011;
         public static final int inputField=0x7f09000a;
         public static final int instructionText=0x7f09000d;
         public static final int leftNum1=0x7f090004;
@@ -225,11 +228,9 @@ public final class R {
         public static final int repeatButton=0x7f09000e;
         public static final int rightNum=0x7f09000c;
         public static final int saveButton=0x7f090014;
+        public static final int scrollView1=0x7f090012;
         public static final int startButton=0x7f090016;
         public static final int studentIdTextView=0x7f090015;
-        public static final int switch1=0x7f090011;
-        public static final int switch2=0x7f090012;
-        public static final int switch3=0x7f090013;
         public static final int twoFingerView=0x7f090001;
     }
     public static final class layout {
@@ -239,40 +240,49 @@ public final class R {
     }
     public static final class raw {
         public static final int pretraining_0=0x7f050000;
-        public static final int pretraining_0_2=0x7f050001;
+        public static final int pretraining_0_ng=0x7f050001;
         public static final int pretraining_1=0x7f050002;
         public static final int pretraining_1a=0x7f050003;
-        public static final int pretraining_2=0x7f050004;
-        public static final int pretraining_3=0x7f050005;
-        public static final int training_0=0x7f050006;
-        public static final int training_1_1=0x7f050007;
-        public static final int training_1_2=0x7f050008;
-        public static final int training_1_3=0x7f050009;
-        public static final int training_1_4=0x7f05000a;
-        public static final int training_1_5=0x7f05000b;
-        public static final int training_1_6=0x7f05000c;
-        public static final int training_2=0x7f05000d;
-        public static final int training_3=0x7f05000e;
-        public static final int training_4=0x7f05000f;
+        public static final int pretraining_1a_ng=0x7f050004;
+        public static final int pretraining_2=0x7f050005;
+        public static final int pretraining_2_ng=0x7f050006;
+        public static final int pretraining_3=0x7f050007;
+        public static final int pretraining_3_ng=0x7f050008;
+        public static final int training_0=0x7f050009;
+        public static final int training_1_1=0x7f05000a;
+        public static final int training_1_2=0x7f05000b;
+        public static final int training_1_3=0x7f05000c;
+        public static final int training_1_4=0x7f05000d;
+        public static final int training_1_5=0x7f05000e;
+        public static final int training_1_6=0x7f05000f;
+        public static final int training_2=0x7f050010;
+        public static final int training_2_ng=0x7f050011;
+        public static final int training_3=0x7f050012;
+        public static final int training_4=0x7f050013;
+        public static final int training_4_ng=0x7f050014;
     }
     public static final class string {
-        public static final int app_name=0x7f070004;
-        public static final int done_message=0x7f070011;
-        public static final int hello=0x7f070003;
-        public static final int pretraining_instr1=0x7f070001;
-        public static final int pretraining_instr2=0x7f070002;
+        public static final int app_name=0x7f070006;
+        public static final int done_message=0x7f070015;
+        public static final int hello=0x7f070005;
+        public static final int pretraining_instr1=0x7f070002;
+        public static final int pretraining_instr2=0x7f070003;
+        public static final int pretraining_instr2_ng=0x7f070004;
         public static final int pretraining_intro=0x7f070000;
-        public static final int training_enter_answer=0x7f07000e;
-        public static final int training_gesture=0x7f07000f;
-        public static final int training_instr_1=0x7f070007;
-        public static final int training_instr_2=0x7f070008;
-        public static final int training_instr_3=0x7f070009;
-        public static final int training_instr_4=0x7f07000a;
-        public static final int training_instr_5=0x7f07000b;
-        public static final int training_instr_6=0x7f07000c;
-        public static final int training_instr_base=0x7f070006;
-        public static final int training_instr_post=0x7f07000d;
-        public static final int training_intro=0x7f070005;
-        public static final int training_repeat_gesture=0x7f070010;
+        public static final int pretraining_intro_ng=0x7f070001;
+        public static final int training_enter_answer=0x7f070010;
+        public static final int training_gesture=0x7f070011;
+        public static final int training_instr_1=0x7f070009;
+        public static final int training_instr_2=0x7f07000a;
+        public static final int training_instr_3=0x7f07000b;
+        public static final int training_instr_4=0x7f07000c;
+        public static final int training_instr_5=0x7f07000d;
+        public static final int training_instr_6=0x7f07000e;
+        public static final int training_instr_base=0x7f070008;
+        public static final int training_instr_post=0x7f07000f;
+        public static final int training_intro=0x7f070007;
+        public static final int training_no_gesture=0x7f070012;
+        public static final int training_repeat_gesture=0x7f070013;
+        public static final int training_repeat_no_gesture=0x7f070014;
     }
 }

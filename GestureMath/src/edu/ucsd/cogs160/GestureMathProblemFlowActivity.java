@@ -41,7 +41,6 @@ public class GestureMathProblemFlowActivity extends Activity
     private Button leftNum3;
     private Button rightNum;
     private EditText inputField;
-    private TextView dbDebugText;  //TODO: this is temporary for debugging the db
     private Button nextButton;
     private Button repeatButton;
 
@@ -69,6 +68,8 @@ public class GestureMathProblemFlowActivity extends Activity
     private GestureMathDataOpenHelper dbHelper;
     private SQLiteDatabase db;
     
+    private boolean isGestureCondition;
+    
     private int downStatus;
     private List<Problem> problemList;
     private int currentProblemIndex;
@@ -94,6 +95,13 @@ public class GestureMathProblemFlowActivity extends Activity
         //initialize db
         dbHelper = new GestureMathDataOpenHelper(this.getApplicationContext());
         db = dbHelper.getWritableDatabase();
+        
+        //get options
+        //for now only one option, gesture_condition
+        if (dbHelper.getOptions(db) == 1)
+            isGestureCondition = true;
+        else
+            isGestureCondition = false;
                 
         //get random student id from start screen
         studentId = getIntent().getIntExtra("studentId", -1);
@@ -126,6 +134,19 @@ public class GestureMathProblemFlowActivity extends Activity
         rightNum.setBackgroundColor(BACKGROUND_COLOR);
         rightNum.setOnTouchListener(this);
         
+        //set up equation text
+        plusLeft1 = (TextView)findViewById(R.id.plusLeft1);
+        plusLeft2 = (TextView)findViewById(R.id.plusLeft2);
+        equals = (TextView)findViewById(R.id.equals);
+        plusRight = (TextView)findViewById(R.id.plusRight);
+        
+        //set up input field
+        inputField = (EditText)findViewById(R.id.inputField);
+        //inputField.setBackgroundColor(BACKGROUND_COLOR);
+        inputField.setBackgroundResource(R.drawable.input_underline);
+        inputField.setOnKeyListener(this);
+        
+        //set up navigation buttons
         nextButton = (Button)findViewById(R.id.nextButton);
         nextButton.setVisibility(View.INVISIBLE);
         nextButton.setOnClickListener(this);
@@ -158,17 +179,6 @@ public class GestureMathProblemFlowActivity extends Activity
         oneFadeOutAnimator.setTarget(oneFingerView);
         oneFadeOutAnimator.addListener(this);
         
-        
-        //set up equation text
-        plusLeft1 = (TextView)findViewById(R.id.plusLeft1);
-        plusLeft2 = (TextView)findViewById(R.id.plusLeft2);
-        equals = (TextView)findViewById(R.id.equals);
-        plusRight = (TextView)findViewById(R.id.plusRight);
-        
-        //set up input field
-        inputField = (EditText)findViewById(R.id.inputField);
-        inputField.setOnKeyListener(this);
-        
         //set up instruction text
         instructionText = (TextView)findViewById(R.id.instructionText);
         
@@ -184,6 +194,7 @@ public class GestureMathProblemFlowActivity extends Activity
     protected void onDestroy() {
         super.onDestroy();
         db.close();
+        GestureMathDataOpenHelper.backupDb();
     }
     
     
@@ -202,10 +213,17 @@ public class GestureMathProblemFlowActivity extends Activity
         repeatButton.setVisibility(View.VISIBLE);
         
         //set up text and play voice
-        instructionText.setText(res.getString(R.string.pretraining_intro));
-        releaseMediaPlayer();
-        mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_0);
-        mediaPlayer.start();
+        if (isGestureCondition) {
+            instructionText.setText(res.getString(R.string.pretraining_intro));
+            releaseMediaPlayer();
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_0);
+            mediaPlayer.start();
+        } else {
+            instructionText.setText(res.getString(R.string.pretraining_intro_ng));
+            releaseMediaPlayer();
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_0_ng);
+            mediaPlayer.start();
+        }
     }
     
     
@@ -228,10 +246,13 @@ public class GestureMathProblemFlowActivity extends Activity
         instructionText.setText(res.getString(R.string.pretraining_instr1));
         releaseMediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.pretraining_1);
+        mediaPlayer.setOnCompletionListener(this);
         startMediaPlayer();
         
-        //animate hands
-        twoFadeInAnimator.start();  //animations chain through listener
+        if (isGestureCondition) {
+            //animate hands
+            twoFadeInAnimator.start();  //animations chain through listener
+        }
     }
     
     
@@ -256,7 +277,11 @@ public class GestureMathProblemFlowActivity extends Activity
         instructionText.setText(res.getString(text));
         releaseMediaPlayer();
         mediaPlayer = MediaPlayer.create(getApplicationContext(), voice);
-        mediaPlayer.start();
+        if (!isGestureCondition) {
+            //Next button appears after speech completes, because no gesture is done
+            mediaPlayer.setOnCompletionListener(this);
+        }
+        startMediaPlayer();
         
         //restore UI elements to original state, clear input, etc
         inputField.setText("");
@@ -264,6 +289,11 @@ public class GestureMathProblemFlowActivity extends Activity
         inputField.setCursorVisible(false);
         unHighlightAll();
         downStatus = 0;
+        
+        if (!isGestureCondition) {
+            toggleTouch(false);
+            touchActive = false;
+        }
     }
     
     
@@ -322,7 +352,11 @@ public class GestureMathProblemFlowActivity extends Activity
     public void trainingGesturePreScreen() {
         //interaction is the same as pretrainingTrialScreen, 
         // but make sure to set the currentScreen correctly for training
-        pretrainingTrialScreen(R.string.training_gesture, R.raw.training_2);
+        if (isGestureCondition) {
+            pretrainingTrialScreen(R.string.training_gesture, R.raw.training_2);
+        } else {
+            pretrainingTrialScreen(R.string.training_no_gesture, R.raw.training_2_ng);
+        }
         currentScreen = 2;
     }
     
@@ -367,7 +401,11 @@ public class GestureMathProblemFlowActivity extends Activity
         //interaction is the same as pretrainingTrialScreen, 
         // but make sure to set the currentScreen correctly for training
         // slightly different text
-        pretrainingTrialScreen(R.string.training_repeat_gesture, R.raw.training_4);
+        if (isGestureCondition) {
+            pretrainingTrialScreen(R.string.training_repeat_gesture, R.raw.training_4);
+        } else {
+            pretrainingTrialScreen(R.string.training_repeat_no_gesture, R.raw.training_4_ng);            
+        }
         currentScreen = 4;   
     }
     
@@ -503,7 +541,11 @@ public class GestureMathProblemFlowActivity extends Activity
                 pretrainingInstructionScreen();
                 break;
             case 1:
-                pretrainingTrialScreen(R.string.pretraining_instr2, R.raw.pretraining_2);
+                if (isGestureCondition) {
+                    pretrainingTrialScreen(R.string.pretraining_instr2, R.raw.pretraining_2);
+                } else {
+                    pretrainingTrialScreen(R.string.pretraining_instr2_ng, R.raw.pretraining_2_ng);
+                }
                 break;
             case 2:                
                 //out of problems, if pretraining, move to training
@@ -643,7 +685,8 @@ public class GestureMathProblemFlowActivity extends Activity
         leftNum1.setBackgroundColor(BACKGROUND_COLOR);
         leftNum2.setBackgroundColor(BACKGROUND_COLOR);
         leftNum3.setBackgroundColor(BACKGROUND_COLOR);
-        inputField.setBackgroundColor(BACKGROUND_COLOR);
+        //inputField.setBackgroundColor(BACKGROUND_COLOR);
+        inputField.setBackgroundResource(R.drawable.input_underline);
     }
     
     
@@ -657,30 +700,27 @@ public class GestureMathProblemFlowActivity extends Activity
                 
                 switch (downStatus) {
                 case 0:
-                    Log.i("info", "down 0");
-                    if (v.getId() == R.id.leftNum1) {
-//                        leftNum1.setBackgroundColor(HINT_COLOR);
-//                        leftNum2.setBackgroundColor(HINT_COLOR);
-                    } else { //leftNum2
-//                        leftNum2.setBackgroundColor(HINT_COLOR);
-//                        leftNum1.setBackgroundColor(HINT_COLOR);                    
+                    Log.i("down", String.valueOf(downStatus));
+                    if (v.getId() == R.id.leftNum1 || v.getId() == R.id.leftNum2) {
+                        downStatus = 1;
                     }
-                    downStatus = 1;
-                    statusText.setText(String.valueOf(downStatus));
                     break;
                 case 1:
-                    Log.i("info", "down 1");
-                    leftNum1.setBackgroundColor(CONFIRM_COLOR);
-                    leftNum2.setBackgroundColor(CONFIRM_COLOR);
-                    //inputField.setBackgroundColor(HINT_COLOR);
-                    downStatus = 2;
-                    statusText.setText(String.valueOf(downStatus));
+                    Log.i("down", String.valueOf(downStatus));
+                    if (v.getId() == R.id.leftNum1 || v.getId() == R.id.leftNum2) {
+                        leftNum1.setBackgroundColor(CONFIRM_COLOR);
+                        leftNum2.setBackgroundColor(CONFIRM_COLOR);
+                        //inputField.setBackgroundColor(HINT_COLOR);
+                        downStatus = 2;
+                    }
                     break;
                 case 2:
+                    Log.i("down", String.valueOf(downStatus));
                     if (v.getId() == R.id.inputField) {
                         inputField.setBackgroundColor(CONFIRM_COLOR);
                         nextButton.setVisibility(View.VISIBLE);
                     }
+                    break;
                 default:
                     Log.i("info", "down default");
                     break;
@@ -691,15 +731,14 @@ public class GestureMathProblemFlowActivity extends Activity
                 
                 switch (downStatus) {
                 case 2:
-                    Log.i("info", "up 2");
+                    Log.i("up", String.valueOf(downStatus));
                     //do nothing
+                    break;
                 case 1:
-                    if (downStatus != 2) {  //i guess this still gets triggered even if we touch two correctly
-                        leftNum1.setBackgroundColor(BACKGROUND_COLOR);
-                        leftNum2.setBackgroundColor(BACKGROUND_COLOR);
-                        downStatus = 0;
-                        statusText.setText(String.valueOf(downStatus));
-                    }
+                    Log.i("up", String.valueOf(downStatus));
+                    leftNum1.setBackgroundColor(BACKGROUND_COLOR);
+                    leftNum2.setBackgroundColor(BACKGROUND_COLOR);
+                    downStatus = 0;
                     break;
                 default:
                     break;
@@ -724,16 +763,12 @@ public class GestureMathProblemFlowActivity extends Activity
                 //if blank, do nothing
             } else {
                 //if answer entered, lock in answer and show next button
-                int didGesture = 0;
-                if (downStatus == 2)
-                    didGesture = 1;  //TODO: move this to a global variable and set in the touch handler?  instead of piping through downStatus
-                
                 if (answer.equals(currentSolution)) {
                     //right answer
-                    dbHelper.addSolvedProblem(db, studentId, currentProblemId, didGesture, 1);
+                    dbHelper.addSolvedProblem(db, studentId, isGestureCondition, currentProblemId, 1);
                 } else {
                     //wrong answer
-                    dbHelper.addSolvedProblem(db, studentId, currentProblemId, didGesture, 0);
+                    dbHelper.addSolvedProblem(db, studentId, isGestureCondition, currentProblemId, 0);
                 }
                 //show next screen button, disable input, change input field color to confirmed
                 nextButton.setVisibility(View.VISIBLE);
@@ -742,9 +777,6 @@ public class GestureMathProblemFlowActivity extends Activity
                 inputField.setCursorVisible(false);
                 inputField.setFocusableInTouchMode(false);
                 //inputField.setBackgroundColor(CONFIRM_COLOR);
-                
-                //debug db solved_problem table
-                //dbDebugText.setText(dbHelper.getSolvedProblems(db));
             }
             return true;
         }
@@ -793,18 +825,19 @@ public class GestureMathProblemFlowActivity extends Activity
         }
         
         if (a.equals(oneFadeOutAnimator)) {
-            nextButton.setVisibility(View.VISIBLE);
+            //do nothing
         }
     }
     
     
     
     public void onCompletion(MediaPlayer mp) {
-        if (currentMode == ProblemMode.TRAINING) {
-            if (currentScreen == 1) {
-                nextButton.setVisibility(View.VISIBLE);
-            }
-        }
+        nextButton.setVisibility(View.VISIBLE);
+//        if (currentMode == ProblemMode.TRAINING) {
+//            if (currentScreen == 1) {
+//                nextButton.setVisibility(View.VISIBLE);
+//            }
+//        }
     }
     
     

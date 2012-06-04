@@ -11,7 +11,9 @@
     <string name="training_instr_post">So one side is equal to the other side.</string>
     <string name="training_enter_answer">Now write your answer in the blank</string>
     <string name="training_gesture">Now it\'s your turn.\nCan you say those words and do those hand movements for me?</string>
+    <string name="training_no_gesture">Now it\'s your turn.\nCan you say those words for me?</string>
     <string name="training_repeat_gesture">Now, can you say those words and do those hand movements one more time for me?</string>
+    <string name="training_repeat_no_gesture">Now, can you say those words one more time for me?</string>
     <string name="done_message">Thanks for participating!</string>
     <!-- Experimenter Problems -->
     <array name="training_exp1">

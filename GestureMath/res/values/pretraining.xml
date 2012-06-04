@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="pretraining_intro">I\'m going to show you some hand movements to help you think about these problems and I want you to repeat them after me</string>
+    <string name="pretraining_intro_ng">I\'m going to show you some words to help you think about these problems and I want you to repeat them after me</string>
     <string name="pretraining_instr1">I want to make one side equal to the other side</string>
     <string name="pretraining_instr2">Now I want you to repeat those words and hand movements</string>
+    <string name="pretraining_instr2_ng">Now I want you to repeat those words</string>
     <array name="pretraining1">
         <item name="id">1</item>
         <item name="type">addition</item>
