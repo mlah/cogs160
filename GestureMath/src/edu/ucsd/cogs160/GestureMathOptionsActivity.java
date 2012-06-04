@@ -9,12 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 
 public class GestureMathOptionsActivity extends Activity implements OnClickListener {
     
-    private Switch gestureCondtionSwitch;
+    private RadioGroup gestureCondtionRadioGroup;
+    private int[] radioIdIndex = {R.id.radioGesture, R.id.radioHighlight, R.id.radioNonGesture};
     
     private Button clearDbButton;
     private Button saveButton;
@@ -41,12 +44,9 @@ public class GestureMathOptionsActivity extends Activity implements OnClickListe
         clearDbButton.setOnClickListener(this);
         
         //get options state from db
-        gestureCondtionSwitch = (Switch)findViewById(R.id.gestureConditionSwitch);
-        if (dbHelper.getOptions(db) == 1) {
-            gestureCondtionSwitch.setChecked(true);
-        } else {
-            gestureCondtionSwitch.setChecked(false);
-        }
+        gestureCondtionRadioGroup = (RadioGroup)findViewById(R.id.radioGestureCondition);
+        int option = dbHelper.getOptions(db);
+        gestureCondtionRadioGroup.check(radioIdIndex[option]);
         
         dbDebugView = (TextView)findViewById(R.id.dbDebugView);
         dbDebugView.setText(dbHelper.getSolvedProblems(db));
@@ -90,11 +90,10 @@ public class GestureMathOptionsActivity extends Activity implements OnClickListe
         
         if (v.getId() == R.id.saveButton) {
             //save options state to db
-            if (gestureCondtionSwitch.isChecked()) {
-                dbHelper.updateOptions(db, 1);
-            } else {
-                dbHelper.updateOptions(db, 0);
-            }
+            int checked = gestureCondtionRadioGroup.getCheckedRadioButtonId();
+            View child = gestureCondtionRadioGroup.findViewById(checked);
+            int index = gestureCondtionRadioGroup.indexOfChild(child);
+            dbHelper.updateOptions(db, index);
             
             //return to start screen
             finish();

@@ -59,7 +59,7 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SOLVED_PROBLEMS_TABLE_CREATE);
         db.execSQL(OPTIONS_TABLE_CREATE);
-        insertOptions(db, 1);
+        insertOptions(db, 0);  //default to gesture condition
     }
 
     @Override
@@ -68,9 +68,8 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
 
     }
     
-    public void addSolvedProblem(SQLiteDatabase db, int student_id, boolean isGestureCondition, int problem_id, int correct) {
-        int gesture_condition = 0;
-        if (isGestureCondition) gesture_condition = 1;
+    public void addSolvedProblem(SQLiteDatabase db, int student_id, int gesture_condition, int problem_id, int correct) {
+
         SQLiteStatement stmt = db.compileStatement(INSERT_SOLVED_PROBLEM);
         stmt.bindLong(1, student_id);
         stmt.bindLong(2, gesture_condition);

@@ -11,6 +11,6 @@ as the value returned by Environment.getExternalStorageDirectory() is /mnt/sdcar
 which doesn't work.  Using the File Manager application on the tablet reports the
 correct path to the microSD card.
 
-Simply use a microSD->SD card adapter to copy the .sqlite database file from the
+Simply use a microSD->SD card adapter to copy the gesture_math.sqlite database file from the
 microSD card to your local machine.  On Mac OS X, this file does not show up in
 the Android File Transfer application window.

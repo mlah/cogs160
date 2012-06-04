@@ -209,10 +209,9 @@ public final class R {
     }
     public static final class id {
         public static final int clearDbButton=0x7f090010;
-        public static final int dbDebugView=0x7f090013;
+        public static final int dbDebugView=0x7f090016;
         public static final int debugText=0x7f090003;
         public static final int equals=0x7f090009;
-        public static final int gestureConditionSwitch=0x7f090011;
         public static final int inputField=0x7f09000a;
         public static final int instructionText=0x7f09000d;
         public static final int leftNum1=0x7f090004;
@@ -221,16 +220,20 @@ public final class R {
         public static final int mainLayout=0x7f090000;
         public static final int nextButton=0x7f09000f;
         public static final int oneFingerView=0x7f090002;
-        public static final int optionsButton=0x7f090017;
+        public static final int optionsButton=0x7f09001a;
         public static final int plusLeft1=0x7f090005;
         public static final int plusLeft2=0x7f090007;
         public static final int plusRight=0x7f09000b;
+        public static final int radioGesture=0x7f090012;
+        public static final int radioGestureCondition=0x7f090011;
+        public static final int radioHighlight=0x7f090013;
+        public static final int radioNonGesture=0x7f090014;
         public static final int repeatButton=0x7f09000e;
         public static final int rightNum=0x7f09000c;
-        public static final int saveButton=0x7f090014;
-        public static final int scrollView1=0x7f090012;
-        public static final int startButton=0x7f090016;
-        public static final int studentIdTextView=0x7f090015;
+        public static final int saveButton=0x7f090017;
+        public static final int scrollView1=0x7f090015;
+        public static final int startButton=0x7f090019;
+        public static final int studentIdTextView=0x7f090018;
         public static final int twoFingerView=0x7f090001;
     }
     public static final class layout {
