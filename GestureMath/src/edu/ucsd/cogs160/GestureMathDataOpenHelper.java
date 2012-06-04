@@ -126,12 +126,16 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     public static void backupDb() {
         Log.i("db backup", "start");
         try {
-            File sd = Environment.getExternalStorageDirectory();
+            //TODO: this directory is a hack for the ASUS Transformer TF-101.
+            // Environment.getExternalStorageDirectory() reports the SD card path as "/mnt/sdcard", but the correct directory is "/Removable/MicroSD"
+            // using the File Manager on the TF-101 shows the correct microSD path.  hopefully this is also the case with other devices
+            //File sd = Environment.getExternalStorageDirectory();
+            File sd = new File("/Removable/MicroSD");
             File data = Environment.getDataDirectory();
 
             if (sd.canWrite()) {
                 String currentDBPath = "//data//" + "edu.ucsd.cogs160" + "//databases//" + DATABASE_NAME;
-                String backupDBPath = DATABASE_NAME;
+                String backupDBPath = DATABASE_NAME + ".sqlite";
                 File currentDB = new File(data, currentDBPath);
                 File backupDB = new File(sd, backupDBPath);
 
@@ -139,17 +143,19 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
                     FileChannel src = new FileInputStream(currentDB).getChannel();
                     FileChannel dst = new FileOutputStream(backupDB).getChannel();
 
-                    dst.transferFrom(src, 0, src.size());
+                    long bytes = dst.transferFrom(src, 0, src.size());
 
                     src.close();
                     dst.close();
-                    
+                                        
+                    Log.i("db backup", "number of bytes " + String.valueOf(bytes));
                     Log.i("db backup", "backup saved at " + backupDB.toString());
                     
                 } else {
-                    Log.e("db backup", "db file does nto exist " + currentDB.toString());
-                }
-                                
+                    Log.e("db backup", "db file does not exist " + currentDB.toString());
+                }              
+            } else {
+                Log.e("db backup", "cannot write to location " + sd.toString());                
             }
         } catch (Exception e) {
             // exception
