@@ -35,9 +35,22 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * GestureMathProblemFlowActivity
+ * 
+ * This is the Activity for the main experiment/problem flow.  It handles the
+ *  execution of the pretraining and training modules, based on the gesture
+ *  condition option set in the database via the Options screen.
+ *  
+ * The layout is main.xml
+ * 
+ * @author mlah
+ * 
+ */
 public class GestureMathProblemFlowActivity extends Activity 
                                             implements OnTouchListener, OnKeyListener, OnClickListener, 
                                                        AnimatorListener, OnCompletionListener {
+    //interface elements
     private TextView statusText;
     private Button leftNum1;
     private Button leftNum2;
@@ -53,8 +66,9 @@ public class GestureMathProblemFlowActivity extends Activity
     private TextView plusRight;
     
     private TextView instructionText;
+    
+    //elements for audio and animation
     private MediaPlayer mediaPlayer = null;
-    private boolean touchActive = false;
     
     private ImageView twoFingerView;
     private ImageView oneFingerView;
@@ -66,14 +80,21 @@ public class GestureMathProblemFlowActivity extends Activity
     private TransitionDrawable highlightTransition2;
     private TransitionDrawable highlightTransition3;
     
+    //colors for background and highlight
     private Resources res;
     private int BACKGROUND_COLOR;
     private int HINT_COLOR;
-    private int CONFIRM_COLOR;
+    private int HIGHLIGHT_COLOR;
     
+    //db connection
     private GestureMathDataOpenHelper dbHelper;
     private SQLiteDatabase db;
     
+    //current application mode (pretraining/training) and which screen
+    private ProblemMode currentMode;
+    private int currentScreen;
+    
+    //variables for holding the current application state
     private int gestureCondition;
     //TODO: this enum doesn't seem to work, as putting GestureConditionCode.GESTURE.getIndex() into the case
     // statement causes an error (case statements must hold a constant value)
@@ -85,23 +106,20 @@ public class GestureMathProblemFlowActivity extends Activity
 //        }
 //        public int index() { return index; } 
 //    }
-    
+    private boolean touchActive = false;
     private int downStatus;
     private List<Problem> problemList;
     private int currentProblemIndex;
     private int maxProblemIndex;
     private int currentProblemId;
     private String currentSolution;
+    private String currentAnswer;
     private int studentId;
     
     private enum ProblemMode {
         PRETEST, PRETRAINING, TRAINING, POSTTEST
     }
-    
-    //these variables completely define the current state of the application
-    private ProblemMode currentMode;
-    private int currentScreen;
-    
+
     
 
     /** Called when the activity is first created. */
@@ -124,11 +142,11 @@ public class GestureMathProblemFlowActivity extends Activity
         res = getResources();
         BACKGROUND_COLOR = color.darker_gray;
         HINT_COLOR = res.getColor(R.color.DodgerBlue); //TODO: unused?
-        CONFIRM_COLOR = res.getColor(R.color.holo_blue_dark);
+        HIGHLIGHT_COLOR = res.getColor(R.color.holo_blue_dark);
 
         //debug text
-        statusText = (TextView)findViewById(R.id.debugText);
-        statusText.setText("Student ID: " + String.valueOf(studentId));
+//        statusText = (TextView)findViewById(R.id.debugText);
+//        statusText.setText("Student ID: " + String.valueOf(studentId));
         downStatus = 0;
         
         //set up buttons
@@ -197,7 +215,7 @@ public class GestureMathProblemFlowActivity extends Activity
         //it seems like each View needs its own TransitionDrawable object
         ColorDrawable layers[] = new ColorDrawable[2]; 
         layers[0] = new ColorDrawable(BACKGROUND_COLOR); 
-        layers[1] = new ColorDrawable(CONFIRM_COLOR); 
+        layers[1] = new ColorDrawable(HIGHLIGHT_COLOR); 
         highlightTransition1 = new TransitionDrawable(layers);
         highlightTransition1.setCrossFadeEnabled(true);
         highlightTransition2 = new TransitionDrawable(layers);
@@ -228,6 +246,13 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
+    
+    /**
+     * Initialize the problem list based on the current mode of the application
+     *  (pretraining or training)
+     * 
+     * @param pm the current ProblemMode
+     */
     public void initializeProblemList(ProblemMode pm) {
         
         ArrayList<Problem> pl = new ArrayList<Problem>();
@@ -280,6 +305,11 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * Set the interface elements to the values in the given Problem object
+     * 
+     * @param problem the current Problem
+     */
     public void initializeProblem(Problem problem) {
         currentProblemId = problem.problem_id;
         
@@ -291,11 +321,22 @@ public class GestureMathProblemFlowActivity extends Activity
         rightNum.setText(String.valueOf(problem.right));
         
         currentSolution = String.valueOf(problem.solution);
+        currentAnswer = "";  //user entered answer
     }
     
     
     
-    //PRETRAINING 0
+    // ************************************************************************
+    // PROBLEM FLOW SCREENS
+    // 
+    // The following methods define the setup of the interface, and interaction,
+    //  of each Pretraining and Training screen, defined in the experiment design
+    //  document in this project
+    // ************************************************************************
+    
+    /**
+     * PRETRAINING 0
+     */
     public void initializePretraining() {
         currentMode = ProblemMode.PRETRAINING;
         currentScreen = 0;
@@ -329,7 +370,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //PRETRAINING 1
+    
+    /**
+     * PRETRAINING 1
+     */
     public void pretrainingInstructionScreen() {
         currentScreen = 1;
         
@@ -366,7 +410,12 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //PRETRAINING 2
+    
+    /**
+     * PRETRAINING 2
+     * @param text the resource ID for the text to show
+     * @param voice the resource ID for the audio file to play
+     */
     public void pretrainingTrialScreen(int text, int voice) {
         currentScreen = 2;
         
@@ -407,7 +456,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //TRAINING 0
+    
+    /**
+     * TRAINING 0
+     */
     public void initializeTraining() {
         currentMode = ProblemMode.TRAINING;
         currentScreen = 0;
@@ -429,8 +481,11 @@ public class GestureMathProblemFlowActivity extends Activity
 
     }
     
+   
     
-    //TRAINING 1
+    /**
+     * TRAINING 1
+     */
     public void trainingSolutionScreen() {
         currentScreen = 1;
         
@@ -458,7 +513,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //TRAINING 2
+    
+    /**
+     * TRAINING 2
+     */
     public void trainingGesturePreScreen() {
         //interaction is the same as pretrainingTrialScreen, 
         // but make sure to set the currentScreen correctly for training
@@ -476,7 +534,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //TRAINING 2A (5)
+    
+    /**
+     * TRAINING 2A (screen 5)
+     */
     public void trainingGesturePreInstructionScreen() {
         //interaction is the same as pretrainingInstructionScreen, 
         // but make sure to set the currentScreen correctly for training
@@ -485,7 +546,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //TRAINING 3
+    
+    /**
+     * TRAINING 3
+     */
     public void trainingAnswerScreen() {
         currentScreen = 3;
         
@@ -511,7 +575,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //TRAINING 4
+    
+    /**
+     * TRAINING 4
+     */
     public void trainingGesturePostScreen() {
         //interaction is the same as pretrainingTrialScreen, 
         // but make sure to set the currentScreen correctly for training
@@ -530,7 +597,10 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //TRAINING 4A (6)
+    
+    /**
+     * TRAINING 4A (screen 6)
+     */
     public void trainingGesturePostInstructionScreen() {
         //interaction is the same as pretrainingInstructionScreen, 
         // but make sure to set the currentScreen correctly for training
@@ -540,7 +610,9 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
-    //DONE WITH EXPERIMENT
+    /**
+     * THANK YOU SCREEN
+     */
     public void doneScreen() {
         currentScreen = -1;
         hideProblem();
@@ -554,6 +626,12 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * Toggle whether elements will respond to touch or not, through the 
+     *  setEnabled() method 
+     * 
+     * @param b boolean to pass to setEnabled()
+     */
     public void toggleTouch(boolean b) {
         leftNum1.setEnabled(b);
         leftNum2.setEnabled(b);
@@ -570,6 +648,11 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * If the mediaPlayer has been initialized, start
+     * TODO: what is the motivation for having this method?  I think just preventing
+     *  null pointer exceptions
+     */
     public void startMediaPlayer() {
         if (mediaPlayer != null) { 
             mediaPlayer.start();
@@ -578,6 +661,9 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * Clean up the mediaPlayer in a responsible way
+     */
     public void releaseMediaPlayer() {
         //clean up mediaPlayer
         if (mediaPlayer != null) {
@@ -587,6 +673,11 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
+    
+    /**
+     * A somewhat hack-y way of playing the highlighting animation.  Adjust the
+     *  handler delays here to match the audio file you use.
+     */
     public void animateHighlight() {
         Handler handler = new Handler(); 
         handler.postDelayed(new Runnable() { 
@@ -607,7 +698,11 @@ public class GestureMathProblemFlowActivity extends Activity
     }
     
     
-    //when the Next button is pressed, move to the next problem (or action)
+
+    /**
+     * Handles the navigation through all the application screens through the
+     *  Next button, according to the experiment design document 
+     */
     public void nextScreen() {
         
         if (currentMode == ProblemMode.PRETRAINING) {
@@ -656,6 +751,14 @@ public class GestureMathProblemFlowActivity extends Activity
                 trainingAnswerScreen();
                 break;
             case 3:
+                //save entered answer to db
+                if (currentAnswer.equals(currentSolution)) {
+                    //right answer
+                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 1, Integer.valueOf(currentAnswer));
+                } else {
+                    //wrong answer
+                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 0, Integer.valueOf(currentAnswer));
+                }
                 trainingGesturePostScreen();
                 break;
             case 4:
@@ -678,6 +781,7 @@ public class GestureMathProblemFlowActivity extends Activity
                 trainingGesturePostScreen();
                 break;
             case -1:
+                //pressed "Done" button on final screen 
                 nextButton.setText("Next >");
                 finish();
                 break;
@@ -687,6 +791,10 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * Handles the navigation through all the application screens through the
+     *  Repeat button, according to the experiment design document 
+     */
     public void repeatScreen() {
         //based on current screen, repeat speech or reset touch
         if (currentMode == ProblemMode.PRETRAINING) {
@@ -730,6 +838,9 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * Show the problem interface elements on the screen
+     */
     public void showProblem() {
         leftNum1.setVisibility(View.VISIBLE);
         plusLeft1.setVisibility(View.VISIBLE);
@@ -748,6 +859,9 @@ public class GestureMathProblemFlowActivity extends Activity
         rightNum.setTextColor(Color.WHITE);
     }
     
+    /**
+     * Hide the problem interface elements from the screen
+     */
     public void hideProblem() {
         leftNum1.setVisibility(View.INVISIBLE);
         plusLeft1.setVisibility(View.INVISIBLE);
@@ -762,6 +876,9 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * "un-highlight" all the problem number elements  
+     */
     public void unHighlightAll() {
         leftNum1.setBackgroundColor(BACKGROUND_COLOR);
         leftNum2.setBackgroundColor(BACKGROUND_COLOR);
@@ -772,7 +889,12 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
-    //handle all touch events
+    /**
+     * Handle all touch events depending on the problem mode
+     *  currentMode or currentScreen is not handled directly in this method, 
+     *  it seems like only the proper screens that need to respond to touch
+     *  (like the user gesture screen) will set touchActive=true 
+     */
     public boolean onTouch(View v, MotionEvent e) {
         //only if touch is active
         if (touchActive) {
@@ -789,8 +911,8 @@ public class GestureMathProblemFlowActivity extends Activity
                 case 1:
                     Log.i("down", String.valueOf(downStatus));
                     if (v.getId() == R.id.leftNum1 || v.getId() == R.id.leftNum2) {
-                        leftNum1.setBackgroundColor(CONFIRM_COLOR);
-                        leftNum2.setBackgroundColor(CONFIRM_COLOR);
+                        leftNum1.setBackgroundColor(HIGHLIGHT_COLOR);
+                        leftNum2.setBackgroundColor(HIGHLIGHT_COLOR);
                         //inputField.setBackgroundColor(HINT_COLOR);
                         downStatus = 2;
                     }
@@ -798,7 +920,7 @@ public class GestureMathProblemFlowActivity extends Activity
                 case 2:
                     Log.i("down", String.valueOf(downStatus));
                     if (v.getId() == R.id.inputField) {
-                        inputField.setBackgroundColor(CONFIRM_COLOR);
+                        inputField.setBackgroundColor(HIGHLIGHT_COLOR);
                         nextButton.setVisibility(View.VISIBLE);
                     }
                     break;
@@ -831,7 +953,10 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
-    //handle all key (keyboard) events
+    /**
+     * Handle all key (keyboard) events.  This is used to capture when the user 
+     * presses the "enter" key on the keyboard to input their answer
+     */
     public boolean onKey(View v, int keyCode, KeyEvent event) {
         
         inputField.setCursorVisible(true);
@@ -842,16 +967,11 @@ public class GestureMathProblemFlowActivity extends Activity
             String answer = ((EditText)v).getText().toString();
             if (answer.equals("")) {
                 //if blank, do nothing
+                nextButton.setVisibility(View.INVISIBLE);
             } else {
-                //if answer entered, lock in answer and show next button
-                if (answer.equals(currentSolution)) {
-                    //right answer
-                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 1, Integer.valueOf(answer));
-                } else {
-                    //wrong answer
-                    dbHelper.addSolvedProblem(db, studentId, gestureCondition, currentProblemId, 0, Integer.valueOf(answer));
-                }
-                //show next screen button, disable input, change input field color to confirmed
+                //if answer entered, update variable that holds user answer
+                currentAnswer = answer;
+                //show next screen button, disable input
                 nextButton.setVisibility(View.VISIBLE);
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(inputField.getWindowToken(), 0);
@@ -866,7 +986,10 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
-    //handle Next and Repeat button clicks
+    /**
+     * Capture the Next and Repeat button clicks (presses), and run the methods
+     *  to handle those events
+     */
     public void onClick(View v) {        
         //if Next button is pressed, do appropriate action
         if (v.getId() == R.id.nextButton) {
@@ -878,12 +1001,17 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * This method is called when an ObjectAnimator ends (if the listener has 
+     *  been set).  We use this method to properly chain the animations that 
+     *  compose the complete example gesture animation 
+     */
     public void onAnimationEnd(Animator a) {
         
         //chaining hands animations
         if (a.equals(twoFadeInAnimator)) {
-            leftNum1.setBackgroundColor(CONFIRM_COLOR);
-            leftNum2.setBackgroundColor(CONFIRM_COLOR);
+            leftNum1.setBackgroundColor(HIGHLIGHT_COLOR);
+            leftNum2.setBackgroundColor(HIGHLIGHT_COLOR);
             try {
                 Thread.sleep(750);
             } catch (InterruptedException e) {
@@ -897,7 +1025,7 @@ public class GestureMathProblemFlowActivity extends Activity
         }
         
         if (a.equals(oneFadeInAnimator)) {
-            inputField.setBackgroundColor(CONFIRM_COLOR);
+            inputField.setBackgroundColor(HIGHLIGHT_COLOR);
             try {
                 Thread.sleep(750);
             } catch (InterruptedException e) {
@@ -913,6 +1041,10 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
+    /**
+     * Triggers on completion of the mediaPlayer (if the listener was set up).
+     *  Sometimes we want the Next button to show up when the speech ends
+     */
     public void onCompletion(MediaPlayer mp) {
         nextButton.setVisibility(View.VISIBLE);
 //        if (currentMode == ProblemMode.TRAINING) {
@@ -924,7 +1056,9 @@ public class GestureMathProblemFlowActivity extends Activity
     
     
     
-    //disable back button
+    /**
+     * A hack to disable the Android OS back button.  There is no turning back!
+     */
     @Override
     public void onBackPressed() {
         // do nothing

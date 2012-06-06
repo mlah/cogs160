@@ -1,0 +1,123 @@
+=== Experiment Design ===
+
+This document describes the division of the experiment script into individual screens
+for the application.  The original script is in the file MMfMRI_Study1_script.doc.
+The following screen codes are used to number the screens in
+GestureMathProblemFlowActivity.java, as well as the audio files.
+
+There are three gesture conditions: Gesture, Highlight, and Non-Gesture.
+
+
+
+=== PRETRAINING ===
+
+** Screen 0:
+
+Text/Speech
+Gesture -- I'm going to show you some hand movements to help you think about these problems and I want you to repeat them after me
+Highlight/Non-Gesture -- I'm going to show you some words to help you think about these problems and I want you to repeat them after me
+
+Next Screen 1
+
+** Screen 1:
+
+Text/Speech
+All -- I want to make one side equal to the other side
+
+Animation
+Gesture -- show hand animation
+Highlight -- show highlight animation
+Non-Gesture -- no animation
+
+Repeat Screen 1
+Next Screen 2
+
+** Screen 2:
+
+Text/Speech
+Gesture -- Now I want you to repeat those words and hand movements
+Highlight/Non-Gesture -- Now I want you to repeat those words
+
+Input
+Gesture -- wait for student to perform gesture before showing Next button
+Highlight/Non-Gesture -- show Next button after speech finishes playing
+
+Repeat Screen 1
+Next (if problems left in pretraining) Screen 1 (else) TRAINING Screen 0
+
+
+=== TRAINING ===
+
+** Screen 0:
+
+Text/Speech
+All -- Pay attention carefully to how I explain this problem
+
+Next Screen 1
+
+** Screen 1:
+
+Show experimenter problem
+
+Text/Speech
+All -- I want to make one side equal to the other side.  See, 5 plus 6 plus 3 is
+       14, and 11 plus 3 is 14.  So one side is equal to the other side.
+
+Repeat replay speech
+Next Screen 2
+
+** Screen 2:
+
+Show student problem
+
+Text/Speech
+Gesture -- Now it's your turn.  Can you say those words and do those hand movements for me?
+Highlight/Non-Gesture -- Now it's your turn.  Can you say those words for me?
+
+(Input same as PRETRAINING 2)
+
+Repeat Screen 2A
+Next Screen 3
+
+** Screen 2A:
+
+(Same as PRETRAINING 1)
+
+Repeat replay speech/animation
+Next Screen 2
+
+** Screen 3:
+
+Text/Speech
+All -- Now write your answer in the blank
+
+Input
+All -- wait until answer is entered before showing Next button
+
+Repeat replay speech
+Next Screen 4
+
+** Screen 4:
+
+Text/Speech
+Gesture -- Now, can you say those words and do those hand movements one more time for me?
+Highlight/Non-Gesture -- Now, can you say those words one more time for me?
+
+(Input same as PRETRAINING 2)
+
+Repeat Screen 4A
+Next (if more training problems) Screen 1 (else) Finish Screen
+
+** Screen 4A:
+
+(Same as PRETRAINING 1)
+
+Repeat replay speech/animation
+Next Screen 4
+
+** Finish Screen
+
+Text
+Thanks for participating!
+
+Next Start Screen

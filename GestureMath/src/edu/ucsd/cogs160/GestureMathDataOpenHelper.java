@@ -13,6 +13,15 @@ import android.database.sqlite.SQLiteStatement;
 import android.os.Environment;
 import android.util.Log;
 
+/**
+ * GestureMathDataOpenHelper
+ * 
+ * This class extends SQLiteOpenHelper and handles connecting to the database
+ *  and executing queries
+ * 
+ * @author mlah
+ *
+ */
 public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 2;
@@ -54,10 +63,17 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
     private static final String UPDATE_OPTIONS =
             "UPDATE " + OPTIONS_TABLE_NAME + " SET " + KEY_GESTURE_CONDITION_OPTION + " = ?;";
 
+    
+    /** Constructor */
     GestureMathDataOpenHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    
+    
+    /**
+     * This method is only called if the database does not exist 
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SOLVED_PROBLEMS_TABLE_CREATE);
@@ -65,12 +81,20 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
         insertOptions(db, 0);  //default to gesture condition
     }
 
+    
+    
+    /** Required method */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // TODO Auto-generated method stub
 
     }
     
+    
+    
+    /**
+     * Add a row to the solved_problem table 
+     */
     public void addSolvedProblem(SQLiteDatabase db, int student_id, int gesture_condition, 
                                                     int problem_id, int correct, int student_answer) {
 
@@ -86,11 +110,20 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
         }
     }
     
+    
+    
+    /**
+     * Get all rows from the solved_problems table 
+     * 
+     * @param db the db to use
+     * @return
+     */
     public String getSolvedProblems(SQLiteDatabase db) {
         String output = "student_id\tgesture_condition\tproblem_id\tcorrect\tstudent_answer\n";
+        //this query is "select * from solved_problems"
         Cursor c = db.query(SOLVED_PROBLEMS_TABLE_NAME, null, null, null, null, null, null);
         while (c.moveToNext()) {
-            output += String.valueOf(c.getInt(0)) + "\t" + 
+            output += String.valueOf(c.getInt(0)) + "\t\t\t" + 
                       String.valueOf(c.getInt(1)) + "\t\t\t\t\t\t\t\t" + 
                       String.valueOf(c.getInt(2)) + "\t\t\t\t" + 
                       String.valueOf(c.getInt(3)) + "\t\t\t" + 
@@ -99,6 +132,15 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
         return output;
     }
 
+    
+    
+    /**
+     * Insert a row into the options table.  Right now the options table only has 
+     *  one column and one row, so this method should only ever be called once
+     *  
+     * @param db the db to use
+     * @param gesture_condition the value to initialize the gesture_condition option
+     */
     public void insertOptions(SQLiteDatabase db, int gesture_condition) {
         SQLiteStatement stmt = db.compileStatement(INSERT_OPTIONS);
         stmt.bindLong(1, gesture_condition);
@@ -108,6 +150,14 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
         }
     }
     
+    
+    
+    /**
+     * Update the gesture_condition option 
+     * 
+     * @param db the db to use
+     * @param gesture_condition the value to update the gesture_condition with
+     */
     public void updateOptions(SQLiteDatabase db, int gesture_condition) {
         SQLiteStatement stmt = db.compileStatement(UPDATE_OPTIONS);
         stmt.bindLong(1, gesture_condition);
@@ -117,17 +167,60 @@ public class GestureMathDataOpenHelper extends SQLiteOpenHelper {
         }
     }
     
-    //for now we only have one option so return a single int
+    
+    
+    /**
+     * Get the options from the db
+     * For now we only have one option so return a single int
+     * @param db the db to use
+     * @return
+     */
     public int getOptions(SQLiteDatabase db) {
+        //this query is "select * from options"
         Cursor c = db.query(OPTIONS_TABLE_NAME, null, null, null, null, null, null);
         c.moveToNext();
         return c.getInt(0);
     }
     
+    
+    
+    /**
+     * Delete all the rows in the solved_problems db
+     * 
+     * @param db the db to use
+     */
     public void deleteAllSolvedProblems(SQLiteDatabase db) {
         db.delete(SOLVED_PROBLEMS_TABLE_NAME, null, null);
     }
     
+    
+    
+    /**
+     * Check if a student_id exists in the solved_problems table, indicating
+     *  the student_id is a repeat and should not be used
+     * 
+     * @param db the db to use
+     * @param student_id the student_id to check if exists in db
+     * @return
+     */
+    public boolean doesStudentIdExist(SQLiteDatabase db, int student_id) {
+        //this query is "select student_id from solved_problems where student_id=[param student_id]"
+        Cursor c = db.query(SOLVED_PROBLEMS_TABLE_NAME, 
+                            new String[] {KEY_STUDENT_ID}, 
+                            KEY_STUDENT_ID + "=" + String.valueOf(student_id), 
+                            null, null, null, null);
+        if (c.moveToNext()) {
+            //if any results, then student ID has already been used 
+            return true;
+        }
+        return false;
+    }
+    
+    
+    
+    /**
+     * Backup the SQLite database to external storage, in this case a microSD card
+     */
     public static void backupDb() {
         Log.i("db backup", "start");
         try {

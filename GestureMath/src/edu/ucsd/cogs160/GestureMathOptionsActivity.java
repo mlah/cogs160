@@ -5,15 +5,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
 
+/**
+ * GestureMathOptionsActivity
+ * 
+ * This Activity handles the Options screen, where users can select the gesture 
+ *  condition and clear the database
+ * 
+ * @author mlah
+ *
+ */
 public class GestureMathOptionsActivity extends Activity implements OnClickListener {
     
     private RadioGroup gestureCondtionRadioGroup;
@@ -26,6 +32,8 @@ public class GestureMathOptionsActivity extends Activity implements OnClickListe
     
     private GestureMathDataOpenHelper dbHelper;
     private SQLiteDatabase db;
+    
+    
     
     /** Called when the activity is first created. */
     @Override
@@ -68,8 +76,12 @@ public class GestureMathOptionsActivity extends Activity implements OnClickListe
 
     
     
+    /**
+     * Respond to button presses (clicks)
+     */
     public void onClick(View v) {
         if (v.getId() == R.id.clearDbButton) {
+            //show confirm dialog before clearing the db
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Are you sure you want to clear the database?")
                    .setCancelable(false)
@@ -86,9 +98,8 @@ public class GestureMathOptionsActivity extends Activity implements OnClickListe
                    });
             AlertDialog alert = builder.create();
             alert.show();
-        }
         
-        if (v.getId() == R.id.saveButton) {
+        } else if (v.getId() == R.id.saveButton) {
             //save options state to db
             int checked = gestureCondtionRadioGroup.getCheckedRadioButtonId();
             View child = gestureCondtionRadioGroup.findViewById(checked);

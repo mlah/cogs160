@@ -1,8 +1,17 @@
 package edu.ucsd.cogs160;
 
+/**
+ * Problem
+ * 
+ * Data structure class to hold the specification for a single math problem.
+ *  Problems are stored as XML in pretraining.xml and training.xml
+ * 
+ * @author mlah
+ *
+ */
 public class Problem {
     
-    //public member variables is not best practice, but it is faster just to treat this like a struct or something
+    //TODO: public member variables is not best practice, but it is faster just to treat this like a struct or something
     public int problem_id;
     public String type;
     public int left1;
